@@ -2,7 +2,10 @@ module.exports = (sequelize, type) => {
   const Clinic = sequelize.define(
     "clinic",
     {
-      name: type.STRING,
+      name: {
+        type: type.STRING,
+        unique: true
+      },
       id: {
         type: type.INTEGER,
         primaryKey: true,
@@ -18,7 +21,7 @@ module.exports = (sequelize, type) => {
   //create association
   Clinic.associate = models => {
     Clinic.hasMany(models.Review);
-    Clinic.hasMany(models.Coordinate);
+    Clinic.belongsTo(models.Coordinate);
   };
   return Clinic;
 };
