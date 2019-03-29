@@ -35,16 +35,16 @@ router
       const Op = Sequelize.Op;
       const { name, address } = req.query;
 
-      if (name) {
+      if (name || address) {
         const clinic = await Clinic.findAll(
           {
             where: {
               [Op.or]: [
                 {
-                  name: { [Op.substring]: name }
+                  address: { [Op.substring]: address }
                 },
                 {
-                  address: { [Op.substring]: address }
+                  name: { [Op.substring]: name }
                 }
               ]
             } //match based on substring name and address
@@ -70,145 +70,77 @@ router
   })
   .post(async (req, res) => {
     try {
-      const Op = Sequelize.Op;
-      const { name, address, tel_office, postal_code, coordinates } = req.body;
-      await sequelize.transaction(async t => {
-        const foundClinic = await Clinic.findOne({
-          where: {
-            [Op.or]: [
+      const clinic = await Clinic.create(req.body, { include: [Coordinate] });
+      res.status(201).json(clinic);
+    } catch (error) {
+      return res.status(400).end(error.message);
+    }
+  });
+//   .put(async (req, res) => {
+// try {
+
+router
+  .route("/:id")
+  .get(async (req, res) => {
+    try {
+      const { id } = req.params;
+      // const Op = Sequelize.Op;
+
+      if (name) {
+        const clinic = await Clinic.findAll(
+          {
+            where: { id: id } //match based on id
+          },
+          {
+            include: [
               {
-                name: name
-              },
-              {
-                address: address
+                model: Review,
+                include: [Customer]
               }
             ]
-          },
-          transaction: t
-        });
-
-        if (foundClinic) {
-          return res
-            .status(400)
-            .json({ error: { message: "clinic already exists" } });
-        }
-        const newClinic = await Clinic.create(
-          {
-            name: name,
-            tel_office: tel_office,
-            address: address,
-            postal_code: postal_code,
-            coordinates: coordinates
-          },
-          { include: [Coordinate] },
-          { transaction: t }
+          }
         );
-        res.status(201).json(newClinic);
-      });
+        res.json(clinic);
+      } else {
+        const clinics = await Clinic.findAll();
+        res.json(clinics);
+      }
     } catch (error) {
-      console.error(error);
-      return res
-        .status(400)
-        .json({ error: { message: "clinic already exists" } });
+      console.error(error.message);
+      return res.sendStatus(400);
+    }
+  })
+  .put(async (req, res) => {
+    try {
+      const { id } = req.params;
+      const clinic = await Clinic.findOne({
+        where: { id },
+        include: [Coordinate]
+      });
+      const updatedClinic = await clinic.update(req.body, {
+        returning: true
+      });
+      return res.status(202).json(updatedClinic);
+    } catch (error) {
+      console.error(error.message);
+      return res.sendStatus(400);
+    }
+  })
+  .delete(async (req, res) => {
+    try {
+      const { id } = req.params;
+      const clinic = await Clinic.destroy({
+        where: { id },
+        include: [Coordinate]
+      });
+      res.status(202).end();
+    } catch (error) {
+      console.error(error.message);
+      return res.sendStatus(400);
     }
   });
 
-router.route("/:id").get(async (req, res) => {
-  try {
-    const { id } = req.params;
-    const Op = Sequelize.Op;
-    // const { name } = req.query;
-
-    if (name) {
-      const clinic = await Clinic.findAll(
-        {
-          where: { id: id } //match based on id
-        },
-        {
-          include: [
-            {
-              model: Review,
-              include: [Customer]
-            }
-          ]
-        }
-      );
-      res.json(clinic);
-    } else {
-      const clinics = await Clinic.findAll();
-      res.json(clinics);
-    }
-  } catch (error) {
-    console.error(error.message);
-    return res.sendStatus(400);
-  }
-});
-
-//   .post(verifyToken, async (req, res) => {
-//     try {
-// const { title, author } = req.body;
-// const foundAuthor = await Author.findOne({ where: { name: author } });
-
-// if (!foundAuthor) {
-//   const createdBook = await Book.create(
-//     { title, author: { name: author } },
-//     { include: [Author] }
-//   );
-//   return res.status(201).json(createdBook);
-// }
-// const createdBook = await Book.create(
-//   { title, authorId: foundAuthor.id },
-//   { include: [Author] }
-// );
-// return res.status(201).json(createdBook);
-
-//Alternative using findOrCreate
-//   const { title, author } = req.body;
-//   await sequelize.transaction(async t => {
-//     const [foundAuthor] = await Author.findOrCreate({
-//       where: {
-//         name: author
-//       },
-//       transaction: t
-//     });
-//     const newBook = await Book.create({ title: title }, { transaction: t });
-//     await newBook.setAuthor(foundAuthor, { transaction: t });
-//     const newBookWithAuthor = await Book.findOne({
-//       where: { id: newBook.id },
-//       include: [Author],
-//       transaction: t
-//     });
-//     res.status(201).json(newBookWithAuthor);
-//   });
-// } catch (error) {
-//   console.error(error.message);
-//   return res.status(400);
-// }
-//   });
-
-// router.route("/:id");
-//   .put(async (req, res) => {
-//     try {
-//       const book = await Book.findOne({
-//         where: { id: req.params.id },
-//         include: [Author]
-//       });
-//       const [foundAuthor] = await Author.findOrCreate({
-//         where: { name: req.body.author }
-//       });
-
-//       await book.update({ title: req.body.title });
-//       await book.setAuthor(foundAuthor);
-//       const updatedBook = await Book.findOne({
-//         where: { id: book.id },
-//         include: [Author]
-//       });
-//       return res.status(202).json(updatedBook);
-//     } catch (error) {
-//       console.error(error.message);
-//       return res.status(400).end();
-//     }
-//   })
+//
 //   .delete(async (req, res) => {
 //     try {
 //       const book = await Book.destroy({
