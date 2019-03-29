@@ -19,4 +19,13 @@ router.route("/register").post(async (req, res) => {
   }
 });
 
+router.route("/").get((req, res) => {
+  try {
+    res.sendStatus(200);
+  } catch (error) {
+    console.error(error.message);
+    return res.status(400).json({ error: error.message });
+  }
+});
+
 module.exports = router;
