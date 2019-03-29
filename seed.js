@@ -7,7 +7,7 @@ const createClinics = async () => {
       tel_office: 68791000,
       address: "1 Turf Club Avenue Singapore Racecourse",
       postal_code: 738078,
-      coordinates: { Latitude: 1.42271, Longitude: 103.7627 }
+      coordinate: { Latitude: 1.42271, Longitude: 103.7627 }
     },
     { include: [Coordinate] }
   );
@@ -18,7 +18,7 @@ const createClinics = async () => {
       tel_office: 64816889,
       address: "338 Ang Mo Kio Ave 1, Singapore 560338, Singapore",
       postal_code: 560338,
-      coordinates: { Latitude: 1.36362, Longitude: 103.84852 }
+      coordinate: { Latitude: 1.36362, Longitude: 103.84852 }
     },
     { include: [Coordinate] }
   );
@@ -29,7 +29,7 @@ const createClinics = async () => {
       tel_office: "64816990",
       address: "24 Jalan Kelulut, Singapore 809041, Singapore",
       postal_code: 809041,
-      coordinates: { Latitude: 1.38342, Longitude: 103.8756 }
+      coordinate: { Latitude: 1.38342, Longitude: 103.8756 }
     },
     { include: [Coordinate] }
   );
