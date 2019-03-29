@@ -11,6 +11,7 @@ const {
 const jwt = require("jsonwebtoken");
 
 const verifyToken = async (req, res, next) => {
+  const secret = "Avengers unite";
   try {
     const { authorization } = req.headers;
     if (!authorization) {
@@ -19,11 +20,9 @@ const verifyToken = async (req, res, next) => {
     const token = authorization.split("Bearer ")[1];
     const userData = await jwt.verify(token, secret);
     if (userData) {
-      // res.status(201);
       return next();
     }
   } catch (error) {
-    console.error(error.message);
     return res.status(403).json({ error: error.message });
   }
 };
@@ -68,16 +67,14 @@ router
       return res.sendStatus(400);
     }
   })
-  .post(async (req, res) => {
+  .post(verifyToken, async (req, res) => {
     try {
       const clinic = await Clinic.create(req.body, { include: [Coordinate] });
       res.status(201).json(clinic);
     } catch (error) {
-      return res.status(400).end(error.message);
+      return res.status(403).end(error.message);
     }
   });
-//   .put(async (req, res) => {
-// try {
 
 router
   .route("/:id")
@@ -110,13 +107,16 @@ router
       return res.sendStatus(400);
     }
   })
-  .put(async (req, res) => {
+  .put(verifyToken, async (req, res) => {
     try {
       const { id } = req.params;
       const clinic = await Clinic.findOne({
         where: { id },
         include: [Coordinate]
       });
+      if (!clinic) {
+        return res.sendStatus(400);
+      }
       const updatedClinic = await clinic.update(req.body, {
         returning: true
       });
@@ -126,7 +126,7 @@ router
       return res.sendStatus(400);
     }
   })
-  .delete(async (req, res) => {
+  .delete(verifyToken, async (req, res) => {
     try {
       const { id } = req.params;
       const clinic = await Clinic.destroy({
@@ -139,21 +139,5 @@ router
       return res.sendStatus(400);
     }
   });
-
-//
-//   .delete(async (req, res) => {
-//     try {
-//       const book = await Book.destroy({
-//         where: { id: req.params.id }
-//       });
-//       if (book) {
-//         return res.sendStatus(202);
-//       }
-//       return res.sendStatus(400);
-//     } catch (error) {
-//       console.error(error.message);
-//       return res.sendStatus(400);
-//     }
-//   });
 
 module.exports = router;

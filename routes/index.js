@@ -1,11 +1,10 @@
 const express = require("express");
 const { Customer } = require("../models/");
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 const router = express.Router();
 
-router.route("/register").get((req, res) => {
-  res.sendStatus(200);
-});
+const secret = "Avengers unite";
 
 router.route("/register").post(async (req, res) => {
   try {
@@ -33,8 +32,12 @@ router.route("/login").post(async (req, res) => {
     if (!match) {
       throw new Error("Your password is invalid, please try again.");
     }
-    return res.status(200).json({ success: "You are successfully logged in" });
-    // const {id} = customer
+    const { id } = customer;
+    //creating payload
+    const userData = { id };
+    const expiresIn24hour = { expiresIn: "24h" };
+    const token = await jwt.sign(userData, secret, expiresIn24hour);
+    return res.status(200).json({ token });
   } catch (error) {
     return res.status(401).send(error.message);
   }
