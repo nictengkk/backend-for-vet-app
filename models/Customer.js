@@ -14,7 +14,11 @@ module.exports = (sequelize, type) => {
         type: type.STRING,
         unique: true
       },
-      password: type.STRING
+      password: type.STRING,
+      isAdmin: {
+        type: type.BOOLEAN,
+        defaultValue: false
+      }
     },
     {
       freezeTableName: true,
@@ -23,16 +27,10 @@ module.exports = (sequelize, type) => {
           const salt = bcrypt.genSaltSync(10);
           customer.password = bcrypt.hashSync(customer.password, salt);
         }
-      },
-      instanceMethods: {
-        validPassword: function(password) {
-          return bcrypt.compareSync(password, this.password);
-        }
       }
     },
     { timestamps: false }
   );
-
 
   Customer.associate = models => {
     Customer.hasMany(models.Review);
