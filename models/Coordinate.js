@@ -15,7 +15,7 @@ module.exports = (sequelize, type) => {
 
   //create association
   Coordinate.associate = models => {
-    Coordinate.belongsTo(models.Clinic);
+    Coordinate.hasOne(models.Clinic);
   };
   return Coordinate;
 };

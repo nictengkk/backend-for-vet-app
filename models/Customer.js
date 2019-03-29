@@ -15,12 +15,12 @@ module.exports = (sequelize, type) => {
     },
     {
       freezeTableName: true,
-      // hooks: {
-      //   beforeCreate: customer => {
-      //     const salt = bcrypt.genSaltSync(10);
-      //     customer.password = bcrypt.hashSync(customer.password, salt);
-      //   }
-      // },
+      hooks: {
+        beforeCreate: customer => {
+          const salt = bcrypt.genSaltSync(10);
+          customer.password = bcrypt.hashSync(customer.password, salt);
+        }
+      },
       instanceMethods: {
         validPassword: function(password) {
           return bcrypt.compareSync(password, this.password);
@@ -30,16 +30,16 @@ module.exports = (sequelize, type) => {
     { timestamps: false }
   );
 
-  Customer.beforeCreate(customer => {
-    return bcrypt
-      .hash(customer.password, 10)
-      .then(hash => {
-        Customer.password = hash;
-      })
-      .catch(err => {
-        throw new Error("Password invalid");
-      });
-  });
+  // Customer.beforeCreate(customer => {
+  //   return bcrypt
+  //     .hash(customer.password, 10)
+  //     .then(hash => {
+  //       Customer.password = hash;
+  //     })
+  //     .catch(err => {
+  //       throw new Error("Password invalid");
+  //     });
+  // });
 
   Customer.associate = models => {
     Customer.hasMany(models.Review);
