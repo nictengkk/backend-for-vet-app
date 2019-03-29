@@ -10,7 +10,10 @@ module.exports = (sequelize, type) => {
         primaryKey: true,
         autoIncrement: true
       },
-      email: type.STRING,
+      email: {
+        type: type.STRING,
+        unique: true
+      },
       password: type.STRING
     },
     {
@@ -30,16 +33,6 @@ module.exports = (sequelize, type) => {
     { timestamps: false }
   );
 
-  // Customer.beforeCreate(customer => {
-  //   return bcrypt
-  //     .hash(customer.password, 10)
-  //     .then(hash => {
-  //       Customer.password = hash;
-  //     })
-  //     .catch(err => {
-  //       throw new Error("Password invalid");
-  //     });
-  // });
 
   Customer.associate = models => {
     Customer.hasMany(models.Review);
