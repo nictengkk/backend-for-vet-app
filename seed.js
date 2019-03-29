@@ -37,7 +37,8 @@ const createClinics = async () => {
   const customer = await Customer.create({
     name: "Bruce Banner",
     email: "brucebanner@avengers.com",
-    password: "iamhulkiamgreenaf"
+    password: "iamhulkiamgreenaf",
+    isAdmin: true
   });
 
   const customer2 = await Customer.create({
