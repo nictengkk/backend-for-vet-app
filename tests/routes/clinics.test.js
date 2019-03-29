@@ -168,8 +168,8 @@ describe("Clinics", () => {
         .expect(403);
     });
 
-    test("successfully adds a clinic to database", () => {
-      jwt.verify.mockResolvedValueOnce("is-valid");
+    test("successfully adds a clinic to database as an admin", () => {
+      jwt.verify.mockResolvedValue({ id: 1 });
 
       return request(app)
         .post(route())
@@ -201,7 +201,7 @@ describe("Clinics", () => {
 
   describe("[PUT] Edits a clinic", () => {
     test("successfully edit an existing clinic with valid token", async () => {
-      jwt.verify.mockResolvedValueOnce("is-valid");
+      jwt.verify.mockResolvedValue({ id: 1 });
 
       const foundClinic = await Clinic.findOne({
         where: { name: "Acacia Veterinary Clinic" },
@@ -237,7 +237,7 @@ describe("Clinics", () => {
     });
 
     test("fails to update clinic as it does not exist", done => {
-      jwt.verify.mockResolvedValueOnce("is-valid");
+      jwt.verify.mockResolvedValue({ id: 1 });
 
       const id = 100;
       request(app)
@@ -257,7 +257,7 @@ describe("Clinics", () => {
 
   describe("[DELETE] Removes a clinic", () => {
     test("Successfully delete a clinic", async () => {
-      jwt.verify.mockResolvedValueOnce("is-valid");
+      jwt.verify.mockResolvedValue({ id: 1 });
 
       const foundClinic = await Clinic.findOne({
         where: { name: "Singapore Turf Club Equine Hospital" },
