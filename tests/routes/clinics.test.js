@@ -3,9 +3,16 @@ const app = require("../../app");
 const { Coordinate, sequelize, Clinic } = require("../../models");
 const createClinics = require("../../seed");
 
+jest.mock("jsonwebtoken");
+const jwt = require("jsonwebtoken");
+
 beforeAll(async () => {
   await sequelize.sync({ force: true });
   await createClinics();
+});
+
+afterEach(() => {
+  jwt.verify.mockReset();
 });
 
 afterAll(async () => {
@@ -119,8 +126,8 @@ describe("Clinics", () => {
   });
 
   describe("[POST] Creates a new clinic", () => {
-    test("should not add an existing clinic", () => {
-      return request(app)
+    test("should not add an existing clinic in database", done => {
+      request(app)
         .post(route())
         .send({
           name: "Singapore Turf Club Equine Hospital",
@@ -129,14 +136,44 @@ describe("Clinics", () => {
           postal_code: 738078,
           coordinate: { Latitude: 1.42271, Longitude: 103.7627 }
         })
-        .catch(res => {
-          expect(res.status).toBe(400);
-        });
+        .expect(403, done);
+    });
+
+    test("denies access when no token is given", done => {
+      request(app)
+        .post(route())
+        .send({
+          name: "Singapore Turf Club Equine Hospital",
+          tel_office: 68791000,
+          address: "1 Turf Club Avenue Singapore Racecourse",
+          postal_code: 738078,
+          coordinate: { Latitude: 1.42271, Longitude: 103.7627 }
+        })
+        .expect(403, done);
+    });
+
+    test("denies access when invalid token is given", async () => {
+      await jwt.verify.mockRejectedValueOnce(new Error("Is invalid token"));
+
+      return request(app)
+        .post(route())
+        .set("Authorization", "Bearer some-invalid-token")
+        .send({
+          name: "Singapore Turf Club Equine Hospital",
+          tel_office: 68791000,
+          address: "1 Turf Club Avenue Singapore Racecourse",
+          postal_code: 738078,
+          coordinate: { Latitude: 1.42271, Longitude: 103.7627 }
+        })
+        .expect(403);
     });
 
     test("successfully adds a clinic to database", () => {
+      jwt.verify.mockResolvedValueOnce("is-valid");
+
       return request(app)
         .post(route())
+        .set("Authorization", "Bearer a-valid-token")
         .send({
           name: "Amber Veterinary Practice Pte Ltd",
           tel_office: 62455543,
@@ -163,7 +200,9 @@ describe("Clinics", () => {
   });
 
   describe("[PUT] Edits a clinic", () => {
-    test("successfully edit an existing clinic", async () => {
+    test("successfully edit an existing clinic with valid token", async () => {
+      jwt.verify.mockResolvedValueOnce("is-valid");
+
       const foundClinic = await Clinic.findOne({
         where: { name: "Acacia Veterinary Clinic" },
         include: [Coordinate]
@@ -171,6 +210,7 @@ describe("Clinics", () => {
       const id = foundClinic.id;
       return request(app)
         .put(route(id))
+        .set("Authorization", "Bearer a-valid-token")
         .send({
           name: "Acacia Veterinary Clinic Pte Ltd",
           tel_office: 64816889,
@@ -178,6 +218,7 @@ describe("Clinics", () => {
           postal_code: 560338,
           coordinate: { Latitude: 1.36362, Longitude: 103.84852 }
         })
+        .expect(202)
         .then(res => {
           const clinic = res.body;
           expect(clinic.name).toBe("Acacia Veterinary Clinic Pte Ltd");
@@ -196,9 +237,12 @@ describe("Clinics", () => {
     });
 
     test("fails to update clinic as it does not exist", done => {
+      jwt.verify.mockResolvedValueOnce("is-valid");
+
       const id = 100;
       request(app)
         .put(route(id))
+        .set("Authorization", "a-valid-token")
         .send({
           id: 2,
           name: "Acacia Veterinary Clinic Pte Ltd",
@@ -213,14 +257,16 @@ describe("Clinics", () => {
 
   describe("[DELETE] Removes a clinic", () => {
     test("Successfully delete a clinic", async () => {
+      jwt.verify.mockResolvedValueOnce("is-valid");
+
       const foundClinic = await Clinic.findOne({
         where: { name: "Singapore Turf Club Equine Hospital" },
         include: [Coordinate]
       });
       const id = foundClinic.id;
-      console.log(foundClinic);
       return request(app)
         .delete(route(id))
+        .set("Authorization", "Bearer a-valid-token")
         .expect(202);
     });
   });
