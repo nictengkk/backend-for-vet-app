@@ -10,8 +10,27 @@ const {
 } = require("../models");
 const jwt = require("jsonwebtoken");
 
+const secret = "Avengers unite";
+const verifyAdmin = async (req, res, next) => {
+  try {
+    const { userData } = req;
+    if (userData) {
+      const user = await Customer.findOne({
+        where: { id: userData.id }
+      });
+      if (user.isAdmin) {
+        return next();
+      } else {
+        return res.status(400).json({ error: error.message });
+      }
+    }
+  } catch (error) {
+    console.log(error.message);
+    return res.status(403).json({ error: error.message });
+  }
+};
+
 const verifyToken = async (req, res, next) => {
-  const secret = "Avengers unite";
   try {
     const { authorization } = req.headers;
     if (!authorization) {
@@ -20,6 +39,7 @@ const verifyToken = async (req, res, next) => {
     const token = authorization.split("Bearer ")[1];
     const userData = await jwt.verify(token, secret);
     if (userData) {
+      req.userData = userData;
       return next();
     }
   } catch (error) {
@@ -67,7 +87,7 @@ router
       return res.sendStatus(400);
     }
   })
-  .post(verifyToken, async (req, res) => {
+  .post([verifyToken, verifyAdmin], async (req, res) => {
     try {
       const clinic = await Clinic.create(req.body, { include: [Coordinate] });
       res.status(201).json(clinic);
@@ -107,7 +127,7 @@ router
       return res.sendStatus(400);
     }
   })
-  .put(verifyToken, async (req, res) => {
+  .put([verifyToken, verifyAdmin], async (req, res) => {
     try {
       const { id } = req.params;
       const clinic = await Clinic.findOne({
@@ -126,7 +146,7 @@ router
       return res.sendStatus(400);
     }
   })
-  .delete(verifyToken, async (req, res) => {
+  .delete([verifyToken, verifyAdmin], async (req, res) => {
     try {
       const { id } = req.params;
       const clinic = await Clinic.destroy({

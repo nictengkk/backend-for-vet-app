@@ -21,7 +21,6 @@ module.exports = (sequelize, type) => {
       }
     },
     {
-      freezeTableName: true,
       hooks: {
         beforeCreate: customer => {
           const salt = bcrypt.genSaltSync(10);
