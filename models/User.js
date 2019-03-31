@@ -4,7 +4,16 @@ module.exports = (sequelize, type) => {
   const User = sequelize.define(
     "user",
     {
-      name: type.STRING,
+      firstName: {
+        type: type.STRING,
+        allowNull: false,
+        validate: {
+          notNull: {
+            msg: "Please enter first name"
+          }
+        }
+      },
+      lastName: { type: type.STRING, allowNull: true },
       id: {
         type: type.INTEGER,
         primaryKey: true,
@@ -27,6 +36,18 @@ module.exports = (sequelize, type) => {
         validate: {
           notNull: {
             msg: "Please enter password"
+          }
+        }
+      },
+      imageUrl: {
+        type: type.STRING,
+        allowNull: false,
+        validate: {
+          notNull: {
+            msg: "Must provide a valid Url"
+          },
+          isUrl: {
+            msg: "Please provide a valid Url"
           }
         }
       },

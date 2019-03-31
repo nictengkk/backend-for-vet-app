@@ -25,9 +25,9 @@ const verifyToken = async (req, res, next) => {
 router.route("/").get(async (req, res) => {
   try {
     const Op = Sequelize.Op;
-    const { email, username, name } = req.query;
+    const { email, username, firstName, lastName } = req.query;
 
-    if (email || username || name) {
+    if (email || username || firstName || lastName) {
       const user = await User.findAll({
         where: {
           [Op.or]: [
@@ -38,7 +38,10 @@ router.route("/").get(async (req, res) => {
               username: { [Op.substring]: username }
             },
             {
-              name: { [Op.substring]: name }
+              firstName: { [Op.substring]: firstName }
+            },
+            {
+              lastName: { [Op.substring]: lastName }
             }
           ]
         },
