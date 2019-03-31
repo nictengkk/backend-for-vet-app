@@ -35,7 +35,7 @@ describe("Users", () => {
   };
 
   describe("[GET] Search for users", () => {
-    test.only("successfully returns all users", () => {
+    test("successfully returns all users", () => {
       const expectedUsers = [
         {
           name: "Bruce Banner",
@@ -69,7 +69,7 @@ describe("Users", () => {
         .expect(200)
         .then(res => verifyUsers(res, expectedUsers));
     });
-    test.only("returns user based on username query", () => {
+    test("returns user based on username query", () => {
       const expectedUser = [
         {
           name: "Tony Stark",
