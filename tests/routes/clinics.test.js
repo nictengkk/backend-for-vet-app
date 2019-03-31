@@ -1,7 +1,7 @@
 const request = require("supertest");
 const app = require("../../app");
 const { Coordinate, sequelize, Clinic } = require("../../models");
-const createClinics = require("../../seed");
+const { createClinics } = require("../../seed");
 
 jest.mock("jsonwebtoken");
 const jwt = require("jsonwebtoken");
@@ -34,7 +34,7 @@ describe("Clinics", () => {
   };
 
   describe("[GET] Search for clinics", () => {
-    test("Successfully returns all clinics", () => {
+  test("Successfully returns all clinics", () => {
       const expectedClinics = [
         {
           name: "Singapore Turf Club Equine Hospital",
@@ -60,6 +60,7 @@ describe("Clinics", () => {
       ];
       return request(app)
         .get(route())
+        .set("Origin", "http://localhost:3000")
         .expect("content-type", /json/)
         .expect(200)
         .then(res => verifyClinics(res, expectedClinics));
@@ -78,6 +79,7 @@ describe("Clinics", () => {
 
       return request(app)
         .get(route())
+        .set("Origin", "http://localhost:3000")
         .query({ name: "Allpets" })
         .expect("content-type", /json/)
         .expect(200)
@@ -97,6 +99,7 @@ describe("Clinics", () => {
 
       return request(app)
         .get(route())
+        .set("Origin", "http://localhost:3000")
         .query({ address: "Kelulut" })
         .expect("content-type", /json/)
         .expect(200)
@@ -118,6 +121,7 @@ describe("Clinics", () => {
 
       return request(app)
         .get(route(id))
+        .set("Origin", "http://localhost:3000")
         .query({ id: 3 })
         .expect("content-type", /json/)
         .expect(200)
@@ -129,6 +133,7 @@ describe("Clinics", () => {
     test("should not add an existing clinic in database", done => {
       request(app)
         .post(route())
+        .set("Origin", "http://localhost:3000")
         .send({
           name: "Singapore Turf Club Equine Hospital",
           tel_office: 68791000,
@@ -142,6 +147,7 @@ describe("Clinics", () => {
     test("denies access when no token is given", done => {
       request(app)
         .post(route())
+        .set("Origin", "http://localhost:3000")
         .send({
           name: "Singapore Turf Club Equine Hospital",
           tel_office: 68791000,
@@ -157,7 +163,6 @@ describe("Clinics", () => {
 
       return request(app)
         .post(route())
-        .set("Authorization", "Bearer some-invalid-token")
         .send({
           name: "Singapore Turf Club Equine Hospital",
           tel_office: 68791000,
@@ -173,7 +178,8 @@ describe("Clinics", () => {
 
       return request(app)
         .post(route())
-        .set("Authorization", "Bearer a-valid-token")
+        .set("Origin", "http://localhost:3000")
+        .set("Cookie", "token=123124")
         .send({
           name: "Amber Veterinary Practice Pte Ltd",
           tel_office: 62455543,
@@ -210,7 +216,8 @@ describe("Clinics", () => {
       const id = foundClinic.id;
       return request(app)
         .put(route(id))
-        .set("Authorization", "Bearer a-valid-token")
+        .set("Origin", "http://localhost:3000")
+        .set("Cookie", "token=123124")
         .send({
           name: "Acacia Veterinary Clinic Pte Ltd",
           tel_office: 64816889,
@@ -242,7 +249,8 @@ describe("Clinics", () => {
       const id = 100;
       request(app)
         .put(route(id))
-        .set("Authorization", "a-valid-token")
+        .set("Origin", "http://localhost:3000")
+        .set("Cookie", "token=123124")
         .send({
           id: 2,
           name: "Acacia Veterinary Clinic Pte Ltd",
@@ -266,7 +274,8 @@ describe("Clinics", () => {
       const id = foundClinic.id;
       return request(app)
         .delete(route(id))
-        .set("Authorization", "Bearer a-valid-token")
+        .set("Origin", "http://localhost:3000")
+        .set("Cookie", "token=123124")
         .expect(202);
     });
   });
