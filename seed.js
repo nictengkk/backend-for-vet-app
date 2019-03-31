@@ -1,4 +1,4 @@
-const { Customer, Clinic, Review, Coordinate } = require("./models");
+const { User, Clinic, Review, Coordinate } = require("./models");
 
 const createClinics = async () => {
   const clinic = await Clinic.create(
@@ -34,28 +34,32 @@ const createClinics = async () => {
     { include: [Coordinate] }
   );
 
-  const customer = await Customer.create({
+  const user = await User.create({
     name: "Bruce Banner",
-    email: "brucebanner@avengers.com",
+    email: "hulk@avengers.com",
+    username: "iamthehulk",
     password: "iamhulkiamgreenaf",
     isAdmin: true
   });
 
-  const customer2 = await Customer.create({
+  const user2 = await User.create({
     name: "Tony Stark",
-    email: "tonystark@avengers.com",
+    email: "ironman@avengers.com",
+    username: "iamironman",
     password: "asdasfasfagdgsdafgsadfasfa"
   });
 
-  const customer3 = await Customer.create({
+  const user3 = await User.create({
     name: "Steve Rogers",
-    email: "steverogers@avengers.com",
+    email: "captainamerica@avengers.com",
+    username: "iamcaptainamerica",
     password: "asdasfasfagdgsdafgsadfasfa"
   });
 
-  const customer4 = await Customer.create({
+  const user4 = await User.create({
     name: "Natasha Romanoff",
-    email: "natasharomanoff@avengers.com",
+    email: "blackwidow@avengers.com",
+    username: "iamaspider",
     password: "asdasfasfagdgsdafgsadfasfa"
   });
 
@@ -84,10 +88,10 @@ const createClinics = async () => {
   await clinic2.addReview(review2);
   await clinic2.addReview(review3);
   await clinic3.addReview(review4);
-  await customer.addReview(review);
-  await customer2.addReview(review2);
-  await customer3.addReview(review3);
-  await customer4.addReview(review4);
+  await user.addReview(review);
+  await user2.addReview(review2);
+  await user3.addReview(review3);
+  await user4.addReview(review4);
 };
 
 module.exports = createClinics;
