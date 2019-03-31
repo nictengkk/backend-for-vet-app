@@ -35,32 +35,40 @@ const createClinics = async () => {
   );
 
   const user = await User.create({
-    name: "Bruce Banner",
+    firstName: "Bruce",
+    lastName: "Banner",
     email: "hulk@avengers.com",
     username: "iamthehulk",
     password: "iamhulkiamgreenaf",
+    imageUrl: "https://avatarfiles.alphacoders.com/586/thumb-58630.jpg",
     isAdmin: true
   });
 
   const user2 = await User.create({
-    name: "Tony Stark",
+    firstName: "Tony",
+    lastName: "Stark",
     email: "ironman@avengers.com",
     username: "iamironman",
-    password: "asdasfasfagdgsdafgsadfasfa"
+    password: "asdasfasfagdgsdafgsadfasfa",
+    imageUrl: "https://avatarfiles.alphacoders.com/759/thumb-75936.jpg"
   });
 
   const user3 = await User.create({
-    name: "Steve Rogers",
+    firstName: "Steve",
+    lastName: "Rogers",
     email: "captainamerica@avengers.com",
     username: "iamcaptainamerica",
-    password: "asdasfasfagdgsdafgsadfasfa"
+    password: "asdasfasfagdgsdafgsadfasfa",
+    imageUrl: "https://avatarfiles.alphacoders.com/782/thumb-78223.jpg"
   });
 
   const user4 = await User.create({
-    name: "Natasha Romanoff",
+    firstName: "Natasha",
+    lastName: "Romanoff",
     email: "blackwidow@avengers.com",
     username: "iamaspider",
-    password: "asdasfasfagdgsdafgsadfasfa"
+    password: "asdasfasfagdgsdafgsadfasfa",
+    imageUrl: "https://avatarfiles.alphacoders.com/132/thumb-132566.jpg"
   });
 
   const review = await Review.create({
@@ -94,4 +102,15 @@ const createClinics = async () => {
   await user4.addReview(review4);
 };
 
-module.exports = createClinics;
+const createUser = async () => {
+  await User.create({
+    firstName: "Carol",
+    lastName: "Denvers",
+    email: "captainmarvel@avengers.com",
+    username: "iemitflames",
+    password: "iamcaptainmarvel",
+    imageUrl: "https://avatarfiles.alphacoders.com/178/thumb-178080.jpg"
+  });
+};
+
+module.exports = { createClinics, createUser };
