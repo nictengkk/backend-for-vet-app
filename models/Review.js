@@ -14,7 +14,7 @@ module.exports = (sequelize, type) => {
 
   //create association
   Review.associate = models => {
-    Review.belongsTo(models.Customer);
+    Review.belongsTo(models.User);
     Review.belongsTo(models.Clinic);
   };
 

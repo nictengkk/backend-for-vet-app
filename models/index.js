@@ -18,7 +18,7 @@ if (env === "production") {
 //pass the models to the connection
 const models = {
   Clinic: sequelize.import("./Clinic"),
-  Customer: sequelize.import("./Customer"),
+  User: sequelize.import("./User"),
   Review: sequelize.import("./Review"),
   Coordinate: sequelize.import("./Coordinate")
 };
