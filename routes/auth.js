@@ -1,24 +1,33 @@
 const express = require("express");
-const { User } = require("../models/");
+const { User } = require("../models");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const router = express.Router();
 
 const secret = "Avengers unite";
+const isDev = process.env.NODE_ENV !== "production";
 
 const cookieOptions = {
-  httpOnly: true
+  httpOnly: true,
+  secure: !isDev
 };
 
-router.route("/register").post(async (req, res) => {
+router.route("/signup").post(async (req, res) => {
   try {
     const user = await User.create(req.body);
     //create a page view that says your account has been successfully created
-    return res.status(201).json(user);
-    // .redirect("/");
-    //how to link back to "/"
+    const { id } = user;
+    const userData = { id };
+    const expiresIn24hour = { expiresIn: "24h" };
+    const token = await jwt.sign(userData, secret, expiresIn24hour);
+    res.cookie("sessionCookie", token, cookieOptions);
+    return res.status(201).json({
+      id: user.id,
+      firstName: user.firstName,
+      lastName: user.lastName ? user.lastName : "",
+      username: user.username
+    });
   } catch (error) {
-    console.error(error.message);
     return res.status(400).json({ error: error.message });
   }
 });
@@ -28,7 +37,9 @@ router.route("/login").post(async (req, res) => {
     const { username, password } = req.body;
     const user = await User.findOne({ where: { username } });
     if (!user) {
-      throw new Error("Please register for an account!");
+      return res
+        .status(400)
+        .json({ error: { message: "User does not exist" } });
     }
 
     const match = await bcrypt.compare(password, user.password);
@@ -41,8 +52,11 @@ router.route("/login").post(async (req, res) => {
     const userData = { id };
     const expiresIn24hour = { expiresIn: "24h" };
     const token = await jwt.sign(userData, secret, expiresIn24hour);
-
-    return res.cookie("sessionCookie", token, cookieOptions).end();
+    res.cookie("sessionCookie", token, cookieOptions);
+    return res.status(201).json({
+      id: user.id,
+      username: user.username
+    });
   } catch (error) {
     return res.status(401).send(error.message);
   }
