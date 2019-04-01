@@ -17,10 +17,10 @@ router.route("/signup").post(async (req, res) => {
     const user = await User.create(req.body);
     //create a page view that says your account has been successfully created
     const { id } = user;
-    const userData = { id };
-    const expiresIn24hour = { expiresIn: "24h" };
-    const token = await jwt.sign(userData, secret, expiresIn24hour);
-    res.cookie("sessionCookie", token, cookieOptions);
+    // const userData = { id };
+    // const expiresIn24hour = { expiresIn: "24h" };
+    // const token = await jwt.sign(userData, secret, expiresIn24hour);
+    // res.cookie("sessionCookie", token, cookieOptions);
     return res.status(201).json({
       id: user.id,
       firstName: user.firstName,
@@ -34,8 +34,8 @@ router.route("/signup").post(async (req, res) => {
 
 router.route("/login").post(async (req, res) => {
   try {
-    const { username, password } = req.body;
-    const user = await User.findOne({ where: { username } });
+    const { email, password } = req.body;
+    const user = await User.findOne({ where: { email } });
     if (!user) {
       return res
         .status(400)
@@ -55,6 +55,9 @@ router.route("/login").post(async (req, res) => {
     res.cookie("sessionCookie", token, cookieOptions);
     return res.status(201).json({
       id: user.id,
+      username: user.username,
+      firstName: user.firstName,
+      lastName: user.lastName ? user.lastName : "",
       username: user.username
     });
   } catch (error) {
