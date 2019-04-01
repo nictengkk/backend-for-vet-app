@@ -3,7 +3,7 @@ const cors = require("cors");
 const app = express();
 
 const clinics = require("./routes/clinics");
-const index = require("./routes/index");
+const auth = require("./routes/auth");
 const users = require("./routes/users");
 const cookieParser = require("cookie-parser");
 
@@ -36,7 +36,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 // routes
-app.use("/", index);
+app.use("/", auth);
 app.use("/api/clinics", clinics);
 app.use("/api/users", users);
 
