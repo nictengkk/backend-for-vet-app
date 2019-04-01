@@ -26,10 +26,43 @@ const createClinics = async () => {
   const clinic3 = await Clinic.create(
     {
       name: "Allpets & Aqualife Vets Pte Ltd",
-      tel_office: "64816990",
+      tel_office: 64816990,
       address: "24 Jalan Kelulut, Singapore 809041, Singapore",
       postal_code: 809041,
       coordinate: { Latitude: 1.38342, Longitude: 103.8756 }
+    },
+    { include: [Coordinate] }
+  );
+
+  const clinic4 = await Clinic.create(
+    {
+      name: "The Pet Doctors (Tiong Bahru) Veterinary Clinic Pte Ltd",
+      tel_office: 62533023,
+      address: "11 Boon Tiong Rd, Singapore 161011, Singapore",
+      postal_code: 161011,
+      coordinate: { Latitude: 1.2861, Longitude: 103.82942 }
+    },
+    { include: [Coordinate] }
+  );
+
+  const clinic5 = await Clinic.create(
+    {
+      name: "Pets Avenue Veterinary Clinic",
+      tel_office: 64710111,
+      address: "8 Empress Rd, Singapore 260008, Singapore",
+      postal_code: 260008,
+      coordinate: { Latitude: 1.31633, Longitude: 103.80525 }
+    },
+    { include: [Coordinate] }
+  );
+
+  const clinic6 = await Clinic.create(
+    {
+      name: "Republic Veterinary Clinic Pte Ltd",
+      tel_office: 67908748,
+      address: "1 Jurong West Central 2, Singapore 648886, Singapore",
+      postal_code: 648886,
+      coordinate: { Latitude: 1.34025, Longitude: 103.70656 }
     },
     { include: [Coordinate] }
   );
