@@ -34,7 +34,7 @@ describe("Clinics", () => {
   };
 
   describe("[GET] Search for clinics", () => {
-  test("Successfully returns all clinics", () => {
+    test("Successfully returns all clinics", () => {
       const expectedClinics = [
         {
           name: "Singapore Turf Club Equine Hospital",
@@ -56,6 +56,27 @@ describe("Clinics", () => {
           address: "24 Jalan Kelulut, Singapore 809041, Singapore",
           postal_code: 809041,
           coordinate: { Latitude: 1.38342, Longitude: 103.8756 }
+        },
+        {
+          name: "The Pet Doctors (Tiong Bahru) Veterinary Clinic Pte Ltd",
+          tel_office: 62533023,
+          address: "11 Boon Tiong Rd, Singapore 161011, Singapore",
+          postal_code: 161011,
+          coordinate: { Latitude: 1.2861, Longitude: 103.82942 }
+        },
+        {
+          name: "Pets Avenue Veterinary Clinic",
+          tel_office: 64710111,
+          address: "8 Empress Rd, Singapore 260008, Singapore",
+          postal_code: 260008,
+          coordinate: { Latitude: 1.31633, Longitude: 103.80525 }
+        },
+        {
+          name: "Mount Pleasant Animal Medical Centre (2004) Pte Ltd",
+          tel_office: 67768858,
+          address: "105 Clementi St 12, Singapore 120105, Singapore",
+          postal_code: 120105,
+          coordinate: { Latitude: 1.32265, Longitude: 103.76967 }
         }
       ];
       return request(app)
@@ -83,7 +104,9 @@ describe("Clinics", () => {
         .query({ name: "Allpets" })
         .expect("content-type", /json/)
         .expect(200)
-        .then(res => verifyClinics(res, expectedClinic));
+        .then(res => {
+          verifyClinics(res, expectedClinic);
+        });
     });
 
     test("returns clinic based on partial address query", () => {
@@ -122,10 +145,11 @@ describe("Clinics", () => {
       return request(app)
         .get(route(id))
         .set("Origin", "http://localhost:3000")
-        .query({ id: 3 })
         .expect("content-type", /json/)
         .expect(200)
-        .then(res => verifyClinics(res, expectedClinic));
+        .then(res => {
+          verifyClinics(res, expectedClinic);
+        });
     });
   });
 

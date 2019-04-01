@@ -19,18 +19,17 @@ const verifyAdmin = async (req, res, next) => {
       }
     }
   } catch (error) {
-    console.log(error.message);
     return res.status(403).json({ error: error.message });
   }
 };
 
 const verifyToken = async (req, res, next) => {
   try {
-    const { token } = req.cookies;
-    if (!token) {
+    const { sessionCookie } = req.cookies;
+    if (!sessionCookie) {
       return res.status(403).json({ error: { message: "Please login" } });
     }
-    const userData = await jwt.verify(token, secret);
+    const userData = await jwt.verify(sessionCookie, secret);
     if (userData) {
       req.userData = userData;
       return next();
@@ -49,7 +48,7 @@ router
 
       //ensure all queries are met regardless of upper lower case
       if (name || address) {
-        const clinic = await Clinic.findAll({
+        const clinics = await Clinic.findAll({
           where: {
             [Op.or]: [
               {
@@ -64,10 +63,14 @@ router
             {
               model: Review,
               include: [{ model: User, attributes: { exclude: ["password"] } }]
+            },
+            {
+              model: Coordinate
             }
           ]
         });
-        res.json(clinic);
+
+        res.json(clinics);
       } else {
         const clinics = await Clinic.findAll({
           include: [
@@ -75,6 +78,9 @@ router
               model: Review,
               as: "reviews",
               include: [{ model: User, attributes: { exclude: ["password"] } }]
+            },
+            {
+              model: Coordinate
             }
           ]
         });
@@ -99,23 +105,20 @@ router
     try {
       const { id } = req.params;
       // const Op = Sequelize.Op;
-
-      if (id) {
-        const clinic = await Clinic.findAll({
-          where: { id: id }, //match based on id
-          include: [
-            {
-              model: Review,
-              as: "reviews",
-              include: [{ model: User, attributes: { exclude: ["password"] } }]
-            }
-          ]
-        });
-        res.json(clinic);
-      } else {
-        const clinics = await Clinic.findAll();
-        res.json(clinics);
-      }
+      const clinic = await Clinic.findAll({
+        where: { id: id }, //match based on id
+        include: [
+          {
+            model: Review,
+            as: "reviews",
+            include: [{ model: User, attributes: { exclude: ["password"] } }]
+          },
+          {
+            model: Coordinate
+          }
+        ]
+      });
+      res.json(clinic);
     } catch (error) {
       return res.status(400).json({ error: error.message });
     }
@@ -158,13 +161,13 @@ router
       const { id } = req.params;
       if (id) {
         const reviews = await Review.findAll({
-          where: { clinicId: id },
-          include: [
-            {
-              model: User,
-              as: "users"
-            }
-          ]
+          where: { clinicId: id }
+          // include: [
+          //   {
+          //     model: User,
+          //     as: "users"
+          //   }
+          // ]
         });
       }
       res.json(reviews);
