@@ -70,7 +70,7 @@ describe("Authentication", () => {
       .post(route)
       .set("Origin", "http://localhost:3000")
       .send({
-        username: "test",
+        email: "test2@test.com",
         password: "testing123"
       })
       .expect(400)
@@ -86,7 +86,7 @@ describe("Authentication", () => {
       .post(route)
       .set("Origin", "http://localhost:3000")
       .send({
-        username: "iemitflames",
+        email: "captainmarvel@avengers.com",
         password: "iamcaptainmarvel"
       })
       .expect(201);
