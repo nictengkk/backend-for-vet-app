@@ -10,7 +10,7 @@ const cookieParser = require("cookie-parser");
 const isDev = process.env.NODE_ENV !== "production";
 
 const whitelist = [
-  "https://findynearestvet.netlify.com",
+  "https://findmynearestvet.netlify.com",
   "https://backend-for-vet-app.herokuapp.com/"
 ];
 
