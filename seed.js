@@ -82,7 +82,7 @@ const createClinics = async () => {
     lastName: "Stark",
     email: "ironman@avengers.com",
     username: "iamironman",
-    password: "asdasfasfagdgsdafgsadfasfa",
+    password: "iamironman",
     imageUrl: "https://avatarfiles.alphacoders.com/759/thumb-75936.jpg"
   });
 
@@ -91,7 +91,7 @@ const createClinics = async () => {
     lastName: "Rogers",
     email: "captainamerica@avengers.com",
     username: "iamcaptainamerica",
-    password: "asdasfasfagdgsdafgsadfasfa",
+    password: "iamcaptainamerica",
     imageUrl: "https://avatarfiles.alphacoders.com/782/thumb-78223.jpg"
   });
 
@@ -100,8 +100,44 @@ const createClinics = async () => {
     lastName: "Romanoff",
     email: "blackwidow@avengers.com",
     username: "iamaspider",
-    password: "asdasfasfagdgsdafgsadfasfa",
+    password: "iamblackwidow",
     imageUrl: "https://avatarfiles.alphacoders.com/132/thumb-132566.jpg"
+  });
+
+  const user5 = await User.create({
+    firstName: "T",
+    lastName: "'Challa",
+    email: "blackpanther@avengers.com",
+    username: "iamaspanther",
+    password: "iamblackpanther",
+    imageUrl: "https://avatarfiles.alphacoders.com/124/thumb-124245.jpg"
+  });
+
+  const user6 = await User.create({
+    firstName: "Clinton",
+    lastName: "Barton",
+    email: "hawkeye@avengers.com",
+    username: "iamhawkeye",
+    password: "iamhawkeye",
+    imageUrl: "https://avatarfiles.alphacoders.com/416/thumb-41673.jpg"
+  });
+
+  const user7 = await User.create({
+    firstName: "Wanda",
+    lastName: "Maximoff",
+    email: "scarlettwitch@avengers.com",
+    username: "iamscarlettwitch",
+    password: "iamawitch",
+    imageUrl: "https://avatarfiles.alphacoders.com/141/thumb-141274.jpg"
+  });
+
+  const user8 = await User.create({
+    firstName: "Thor",
+    lastName: "Odinson",
+    email: "thor@avengers.com",
+    username: "iamgodofthunder",
+    password: "iamthor",
+    imageUrl: "https://avatarfiles.alphacoders.com/127/thumb-127575.jpg"
   });
 
   const review = await Review.create({
@@ -124,15 +160,42 @@ const createClinics = async () => {
       "Great and awesome staff who are friendly and helpful unlike other vets like brighton who has a very negative attitude towards the clients. The vet here are willing to go the extra mile to ensure the pets get the best diagnosis unlike others who just diagnose the problem and brush u away and having charge a high price. Allpets prices are super affordable even for my big dog."
   });
 
+  const review5 = await Review.create({
+    description:
+      "Clinic is very clean and not crowded as its on appointment basis. Managed to get an appointment on the day itself. Very detailed report and analysis from the vet herself and her colleagues. Thank you for the great service. Btw, they follow up after the consultation as well."
+  });
+
+  const review6 = await Review.create({
+    description:
+      "Professional and excellent vet doctors. The doctors were very patient and caring to my dogs. Explain the diagnosis and answers my questions professionally. Recommend to book before you come. There is a long wait if you do walk-ins."
+  });
+
+  const review7 = await Review.create({
+    description:
+      "Professional & Caring for my baby . It's hard to find passionate vets nowadays ,  I recommend the Animal Doctors & pls keep up the passion!"
+  });
+  const review8 = await Review.create({
+    description:
+      "Caring and Helpful staffs and vets. Will go the extra mile to help pets and pet owners through their difficult times. Nice people. Thumbs Up for them."
+  });
+
   //magic methods to link up relationship between models.
   await clinic.addReview(review);
   await clinic2.addReview(review2);
   await clinic2.addReview(review3);
   await clinic3.addReview(review4);
+  await clinic6.addReview(review5);
+  await clinic4.addReview(review6);
+  await clinic4.addReview(review7);
+  await clinic5.addReview(review8);
   await user.addReview(review);
   await user2.addReview(review2);
   await user3.addReview(review3);
   await user4.addReview(review4);
+  await user5.addReview(review5);
+  await user6.addReview(review6);
+  await user7.addReview(review7);
+  await user8.addReview(review8);
 };
 
 const createUser = async () => {
