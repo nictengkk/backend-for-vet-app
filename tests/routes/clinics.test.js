@@ -203,7 +203,7 @@ describe("Clinics", () => {
       return request(app)
         .post(route())
         .set("Origin", "http://localhost:3000")
-        .set("Cookie", "token=123124")
+        .set("Cookie", "sessionCookie=123124")
         .send({
           name: "Amber Veterinary Practice Pte Ltd",
           tel_office: 62455543,
@@ -241,7 +241,7 @@ describe("Clinics", () => {
       return request(app)
         .put(route(id))
         .set("Origin", "http://localhost:3000")
-        .set("cookie", "token=123124")
+        .set("cookie", "sessionCookie=123124")
         .send({
           name: "Acacia Veterinary Clinic Pte Ltd",
           tel_office: 64816889,
@@ -274,7 +274,7 @@ describe("Clinics", () => {
       request(app)
         .put(route(id))
         .set("Origin", "http://localhost:3000")
-        .set("Cookie", "token=123124")
+        .set("Cookie", "sessionCookie=123124")
         .send({
           id: 2,
           name: "Acacia Veterinary Clinic Pte Ltd",
@@ -299,7 +299,7 @@ describe("Clinics", () => {
       return request(app)
         .delete(route(id))
         .set("Origin", "http://localhost:3000")
-        .set("Cookie", "token=123124")
+        .set("Cookie", "sessionCookie=123124")
         .expect(202);
     });
   });

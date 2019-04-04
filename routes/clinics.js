@@ -29,7 +29,9 @@ const verifyToken = async (req, res, next) => {
     if (!sessionCookie) {
       return res.status(403).json({ error: { message: "Please login" } });
     }
+
     const userData = await jwt.verify(sessionCookie, secret);
+
     if (userData) {
       req.userData = userData;
       return next();
