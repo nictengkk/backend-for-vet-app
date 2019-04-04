@@ -72,11 +72,11 @@ describe("Clinics", () => {
           coordinate: { Latitude: 1.31633, Longitude: 103.80525 }
         },
         {
-          name: "Mount Pleasant Animal Medical Centre (2004) Pte Ltd",
-          tel_office: 67768858,
-          address: "105 Clementi St 12, Singapore 120105, Singapore",
-          postal_code: 120105,
-          coordinate: { Latitude: 1.32265, Longitude: 103.76967 }
+          name: "Republic Veterinary Clinic Pte Ltd",
+          tel_office: 67908748,
+          address: "1 Jurong West Central 2, Singapore 648886, Singapore",
+          postal_code: 648886,
+          coordinate: { Latitude: 1.34025, Longitude: 103.70656 }
         }
       ];
       return request(app)
@@ -241,7 +241,7 @@ describe("Clinics", () => {
       return request(app)
         .put(route(id))
         .set("Origin", "http://localhost:3000")
-        .set("Cookie", "token=123124")
+        .set("cookie", "token=123124")
         .send({
           name: "Acacia Veterinary Clinic Pte Ltd",
           tel_office: 64816889,
