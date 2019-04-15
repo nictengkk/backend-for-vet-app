@@ -47,9 +47,9 @@ router.route("/login").post(async (req, res) => {
     if (!match) {
       throw new Error("Your password is invalid, please try again.");
     }
-    const { id } = user;
+    const { id, dataValues } = user;
     //creating payload
-    const userData = { id };
+    const userData = { id, dataValues };
     const expiresIn24hour = { expiresIn: "24h" };
     const token = await jwt.sign(userData, secret, expiresIn24hour);
     res.cookie("sessionCookie", token, cookieOptions);
@@ -58,7 +58,8 @@ router.route("/login").post(async (req, res) => {
       username: user.username,
       firstName: user.firstName,
       lastName: user.lastName ? user.lastName : "",
-      username: user.username
+      username: user.username,
+      isAdmin: user.dataValues.isAdmin
     });
   } catch (error) {
     return res.status(401).send(error.message);

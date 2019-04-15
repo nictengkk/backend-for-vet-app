@@ -72,7 +72,7 @@ const createClinics = async () => {
     lastName: "Banner",
     email: "hulk@avengers.com",
     username: "iamthehulk",
-    password: "iamhulkiamgreenaf",
+    password: "iamhulk",
     imageUrl: "https://avatarfiles.alphacoders.com/586/thumb-58630.jpg",
     isAdmin: true
   });
